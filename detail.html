@@ -27,23 +27,37 @@
                     <a class="nav-link active" href="./index.html">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="get_data(1,12,'cat')">Meow</a>
+                    <a class="nav-link" href="./index.html" onclick="get_data(1,12,'cat')">Meow</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" onclick="get_data(1,12,'dog')">Bow-Wow</a>
+                    <a class="nav-link" href="./index.html" onclick="get_data(1,12,'dog')">Bow-Wow</a>
                 </li>
             </ul>
         </div>
     </nav>
 
     <div class="detail_content">
-        
-        <div class="left">
 
+        <!-- <div class="left">
+            <div class="detail_img">
+                <img src="https://picsum.photos/id/1025/200/300" alt="">
+            </div>
         </div>
+
         <div class="right">
-
-        </div>
+            <div class="detail_item">入所天數：</div>
+            <div class="detail_item">入所日期：</div>
+            <div class="detail_item">收容編號：</div>
+            <div class="detail_item">動物別：</div>
+            <div class="detail_item">動物性別：</div>
+            <div class="detail_item">毛色：</div>
+            <div class="detail_item">動物品種：</div>
+            <div class="detail_item">是否開放認領養：</div>
+            <div class="detail_item">公告收容所：</div>
+            <div class="detail_item">收容所電話：</div>
+            <div class="detail_item">收容所地址：</div>
+            <div class="detail_item">描述：</div>
+        </div> -->
         
     </div>
 
@@ -65,36 +79,78 @@
         var url = new URL(location.href);
 
         var id = url.searchParams.get('id');
-        
         console.log(id);
-        // axios.get('https://data.coa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL')
-        // .then(function(res){
-        //     //處理回應
+        axios.get('https://data.coa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL')
+        .then(function(res){
+            //處理回應
 
-        //     res.data.forEach(element => {
+            $('.detail_content').children().remove();
+
+            let detailText = '';
+            let sex = '';
+            let kind = '';
+
+            res.data.forEach(element => {
                 
-        //         if(element.animal_id == id){
-        //             console.log(element.animal_id);
+                if(element.animal_id == id){
+                    console.log(element);
 
-        //             if(element.album_file == ''){
-        //                 imgSrc = 'https://picsum.photos/id/1025/200/300'
-        //             }else{
-        //                 imgSrc = element.album_file;
-        //             }
+                    if(element.album_file == ''){
+                        imgSrc = 'https://picsum.photos/id/1025/200/300'
+                    }else{
+                        imgSrc = element.album_file;
+                    }
+
+                    if(element.animal_sex == 'F'){
+
+                        sex = '女生';
+                    }else if(element.animal_sex == 'M'){
+
+                        sex = '男生';
+                    }else{
+                        sex = '無資料';
+                    }
+
+                    if(element.animal_kind == '狗'){
+                        kind = '汪汪';
+                    }else if(element.animal_kind == '貓'){
+                        kind = '喵喵';
+                    }else{
+                        kind = '其他';
+                    }
 
 
+                    detailText = `<div class="left">
+                        <div class="detail_img">
+                            <img src="${imgSrc}" alt="">
+                        </div>
+                    </div>
 
+                    <div class="right">
+                        <div class="detail_item"><span>動物別：</span>${kind}</div>
+                        <div class="detail_item"><span>動物性別：</span>${sex}</div>
+                        <div class="detail_item"><span>動物年紀：</span>${(element.animal_age == '')?'不詳':element.animal_age}</div>
+                        <div class="detail_item"><span>毛色：</span>${element.animal_colour}</div>
+                        <div class="detail_item"><span>動物品種：</span>${element.animal_Variety}</div>
+                        <div class="detail_item"><span>是否絕育：</span>${(element.animal_sterilization == 'T')?'是':'否'}</div>
+                        <div class="detail_item"><span>公告收容所：</span>${element.shelter_name}</div>
+                        <div class="detail_item"><span>收容所電話：</span>${element.shelter_tel}</div>
+                        <div class="detail_item"><span>收容所地址：</span>${element.shelter_address}</div>
+                        <div class="detail_item"><span>描述：</span>${element.animal_remark}</div>
+                    </div>`
 
-        //         }
+                $('.detail_content').append(detailText);
 
-        //     });
+                }
+
+            });
 
                 
-        //     })
-        //     .catch(function(err){
-        //         //error
+            })
+            .catch(function(err){
+                //error
                 
-        // })
+        })
             
     
         
