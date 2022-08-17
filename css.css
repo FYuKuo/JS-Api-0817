@@ -130,10 +130,22 @@
 }
 
 
+@media (max-width:1000px){
+
+    .detail_content {
+        flex-direction: column;
+    }
+
+    .left {
+        width: 80%;
+    }
+}
+
 @media (max-width:1000px) and  (min-width:768px){
     .cardGroup {
         grid-template-columns: 1fr 1fr ;
     }  
+
 }
 
 @media (max-width:767px){
