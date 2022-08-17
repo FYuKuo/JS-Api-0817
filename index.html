@@ -15,60 +15,64 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3 px-4 myNav shadow-sm">
-        <a class="navbar-brand" href="#">浪愛回家</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3 px-4 myNav shadow-sm sticky-top">
+        <a class="navbar-brand" href="./index.html">浪愛回家</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav ">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                <li class="nav-item">
+                    <a class="nav-link active" href="./index.html">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
+                    <a class="nav-link" href="#" onclick="get_data(1,12,'cat')">Meow</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
+                    <a class="nav-link" href="#" onclick="get_data(1,12,'dog')">Bow-Wow</a>
                 </li>
             </ul>
         </div>
     </nav>
 
-    <div class="container cardGroup">
-        <!-- <a href="" class="cardLink">
-
-            <div class="cardImg">
-                <img src="https://picsum.photos/id/1/200/300" alt="">
-            </div>
-            <div class="cardText">
-                <div class="cardText_name">
-                    <div class="cardText_name_kind">
-
-                        123123
+    <div class="content">
+        
+        <div class="container cardGroup">
+            <!-- <a href="" class="cardLink">
+    
+                <div class="cardImg">
+                    <img src="https://picsum.photos/id/1/200/300" alt="">
+                </div>
+                <div class="cardText">
+                    <div class="cardText_name">
+                        <div class="cardText_name_kind">
+    
+                            123123
+                        </div>
+                        <div class="cardText_name_area">
+    
+                            123123
+                        </div>
                     </div>
-                    <div class="cardText_name_area">
-
-                        123123
+                    <div class="cardText_icon">
+                        <i class="fa-solid fa-venus"></i>
                     </div>
                 </div>
-                <div class="cardText_icon">
-                    <i class="fa-solid fa-venus"></i>
-                </div>
-            </div>
-
-        </a> -->
-    </div>
-    <div class="btn-toolbar container justify-content-center my-5" role="toolbar" aria-label="Toolbar with button groups">
-        <div class="btn-group mr-2" role="group" aria-label="First group">
-          <button type="button" class="btn btn-secondary">1</button>
-          <button type="button" class="btn btn-secondary">2</button>
-          <button type="button" class="btn btn-secondary">3</button>
-          <button type="button" class="btn btn-secondary">4</button>
+    
+            </a> -->
         </div>
+        <div class="btn-toolbar container justify-content-center my-5" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group" role="group" aria-label="First group">
+              <!-- <button type="button" class="btn btn-secondary" onclick="get_data(1,12)">1</button>
+              <button type="button" class="btn btn-secondary">2</button>
+              <button type="button" class="btn btn-secondary">3</button>
+              <button type="button" class="btn btn-secondary">4</button> -->
+            </div>
+    
+        </div>
+    </div>
 
-      </div>
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
@@ -82,82 +86,171 @@
         crossorigin="anonymous"></script>
 
     <script>
+
+
+        get_data(1,12,'all');
+        function get_data(page,limit,chKind){
+        
         axios.get('https://data.coa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL')
         .then(function(res){
-        //處理回應
+            //處理回應
+
+                
+                $('.cardGroup').children().remove();
+                $('.btn-group').children().remove();
+
+                // console.log(res.data);
+
+                let kindArray = new Array();
+                
+                switch (chKind) {
+                    case 'all':
+                        kindArray = res.data;
+                    break;
+
+                    case 'cat':
+                    res.data.forEach(element => {
+                        if(element.animal_kind == '貓'){
+                            kindArray.push(element);
+                        }
+                        
+                    });
+                    break;
+
+                    case 'dog':
+                    res.data.forEach(element => {
+                        if(element.animal_kind == '狗'){
+                            kindArray.push(element);
+                        }
+                        
+                    });
+                    break;
+
+                }
+                
+                let num = kindArray.length;
+                let pages = Math.ceil(num/limit);
+                let start = ((page-1)*limit);
+                let end = (page*limit < kindArray.length)?(page*limit):(kindArray.length);
+                let sex = '';
+                let sexClass = '';
+                let imgSrc = '';
+                let kind = '';
+                let appendText = ''
+                let startNum;
+                let endNum;
+                let nowPage = '';
+    
+                for (let i = start; i < end; i++) {
+    
+                    if(kindArray[i].animal_sex == 'F'){
+                        sex = '<i class="fa-solid fa-venus"></i>';
+                        sexClass = 'girl';
+                    }else if(kindArray[i].animal_sex == 'M'){
+                        sex = '<i class="fa-solid fa-mars"></i>';
+                        sexClass = 'boy';
+                    }else{
+                        sex = '';
+                        sex = '';
+                    }
+                    
+                    if(kindArray[i].album_file == ''){
+                        imgSrc = 'https://picsum.photos/id/1025/200/300'
+                    }else{
+                        imgSrc = kindArray[i].album_file;
+                    }
+    
+                    if(kindArray[i].animal_kind == '狗'){
+                        kind = '汪汪';
+                    }else if(kindArray[i].animal_kind == '貓'){
+                        kind = '喵喵';
+                    }else{
+                        kind = '其他';
+                    }
+    
+    
+                    appendText = `
+                    <a href="./detail.html?id=${kindArray[i].animal_id}" class="cardLink">
+                        <div class="cardImg">
+                            <img src="${imgSrc}" alt="">
+                        </div>
+                        <div class="cardText">
+                            <div class="cardText_name">
+                                <div class="cardText_name_kind">
+    
+                                    ${kind}
+                                </div>
+                                <div class="cardText_name_area">
+    
+                                    ${kindArray[i].animal_place}
+                                </div>
+                            </div>
+                            <div class="cardText_icon ${sexClass}">
+                                ${sex}
+                            </div>
+                        </div>
+    
+                        </a>`;
+                    
+                    $('.cardGroup').append(appendText);
+                }
+    
+                if(page < 3){
+                    startNum = 1;
+                    endNum = 6;
+                
+                }else{
+                    startNum = page-2;
+                    endNum = page+3;
+                }
+
+                if(page+1 == pages){
+                    startNum = page-3;
+                    endNum = pages+1;
+
+                }
+
+                if(page == pages){
+                    startNum = page-4;
+                    endNum = pages+1;
+
+                }
+                
+                console.log(startNum);
+
+                if(page > 1){
+                    $('.btn-group').append(`<button type="button" class="btn btn-secondary" onclick="get_data(1,${limit},'${chKind}')"><i class="fa-solid fa-angles-left"></i></button>`)
+                    $('.btn-group').append(`<button type="button" class="btn btn-secondary" onclick="get_data(${page-1},${limit},'${chKind}')"><i class="fa-solid fa-angle-left"></i></button>`)
+                }
+
+                for (let i = startNum; i < endNum; i++) {
+                    if(page == i){
+                        nowPage = 'nowPage';
+                    }else{
+                        nowPage = '';
+                    }
+                    
+                    $('.btn-group').append(`<button type="button" class="btn btn-secondary ${nowPage}" onclick="get_data(${i},${limit},'${chKind}')">${i}</button>`)
+                }
+
+                if(page < pages){
+                    $('.btn-group').append(`<button type="button" class="btn btn-secondary" onclick="get_data(${page+1},${limit},'${chKind}')"><i class="fa-solid fa-angle-right"></i></button>`)
+                    $('.btn-group').append(`<button type="button" class="btn btn-secondary" onclick="get_data(${pages},${limit},'${chKind}')"><i class="fa-solid fa-angles-right"></i></button>`)
+                    
+                }
+                
+            })
+            .catch(function(err){
+                //error
+                
+            })
+            
+        }
         
-            let num = res.data.length;
-            let limit = 12;
-            let pages = Math.ceil(num/limit);
-            let page = 2;
-            let start = ((page-1)*limit)+1;
-            let end = page*limit;
-            let sex = '';
-            let sexClass = '';
-            let imgSrc = '';
-            let kind = '';
-            let appendText = ''
 
-
-            for (let i = start; i <= end; i++) {
-
-                if(res.data[i].animal_sex == 'F'){
-                    sex = '<i class="fa-solid fa-venus"></i>';
-                    sexClass = 'girl';
-                }else if(res.data[i].animal_sex == 'M'){
-                    sex = '<i class="fa-solid fa-mars"></i>';
-                    sexClass = 'boy';
-                }else{
-                    sex = '';
-                    sex = '';
-                }
-                
-                if(res.data[i].album_file == ''){
-                    imgSrc = 'https://picsum.photos/id/1025/200/300'
-                }else{
-                    imgSrc = res.data[i].album_file;
-                }
-
-                if(res.data[i].animal_kind == '狗'){
-                    kind = '汪汪';
-                }else if(res.data[i].animal_kind == '貓'){
-                    kind = '喵喵';
-                }else{
-                    kind = '其他';
-                }
-
-
-                appendText = `
-                <a href="" class="cardLink">
-                    <div class="cardImg">
-                        <img src="${imgSrc}" alt="">
-                    </div>
-                    <div class="cardText">
-                        <div class="cardText_name">
-                            <div class="cardText_name_kind">
-
-                                ${kind}
-                            </div>
-                            <div class="cardText_name_area">
-
-                                ${res.data[i].animal_place}
-                            </div>
-                        </div>
-                        <div class="cardText_icon ${sexClass}">
-                            ${sex}
-                        </div>
-                    </div>
-
-                    </a>`;
-                
-                $('.cardGroup').append(appendText);
-            }
-
-            // console.log(pages);
-        })
-        .catch(function(err){
-        //error
-
+        $('.nav-item').on('click',function() {
+            $(this).removeClass('active');
+            $(this).addClass('active');
         })
     </script>
 </body>

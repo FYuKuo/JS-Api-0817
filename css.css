@@ -4,13 +4,22 @@
     color: white;
 }
 
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: calc(100vh - 72px);
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
 .cardGroup {
     width: 100%;
     display: grid;
     grid-column-gap: 60px;
     grid-row-gap: 38px;
     grid-template-columns: 1fr 1fr 1fr;
-    margin-top: 50px;
+
     margin-bottom: 50px;
 }
 
@@ -69,6 +78,10 @@
 
 .girl {
     color: rgb(255, 144, 144);
+}
+
+.nowPage {
+    background-color: #545b62!important;
 }
 
 @media (max-width:1000px) and  (min-width:768px){
