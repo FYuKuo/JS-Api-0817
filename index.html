@@ -90,11 +90,17 @@
 
         get_data(1,12,'all');
         function get_data(page,limit,chKind){
-        
+
+        $('.cardGroup').children().remove();
+        $('.content').prepend(`<div class="container message d-flex justify-content-center align-items-center">
+            載入中
+        </div>`);
+
         axios.get('https://data.coa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL')
         .then(function(res){
             //處理回應
 
+                $('.message').remove();
                 
                 $('.cardGroup').children().remove();
                 $('.btn-group').children().remove();
@@ -217,7 +223,7 @@
 
                 }
                 
-                console.log(startNum);
+                // console.log(startNum);
 
                 if(page > 1){
                     $('.btn-group').append(`<button type="button" class="btn btn-secondary" onclick="get_data(1,${limit},'${chKind}')"><i class="fa-solid fa-angles-left"></i></button>`)

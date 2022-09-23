@@ -13,6 +13,10 @@
     padding-bottom: 20px;
 }
 
+.message {
+    height: 55vh;
+}
+
 .cardGroup {
     width: 100%;
     display: grid;

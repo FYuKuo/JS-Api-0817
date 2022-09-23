@@ -38,6 +38,9 @@
 
     <div class="detail_content">
 
+        <div class="container message d-flex justify-content-center align-items-center">
+            載入中
+        </div>
         <!-- <div class="left">
             <div class="detail_img">
                 <img src="https://picsum.photos/id/1025/200/300" alt="">
@@ -79,10 +82,11 @@
         var url = new URL(location.href);
 
         var id = url.searchParams.get('id');
-        console.log(id);
+        // console.log(id);
         axios.get('https://data.coa.gov.tw/Service/OpenData/TransService.aspx?UnitId=QcbUEzN6E6DL')
         .then(function(res){
             //處理回應
+            $('.message').remove();
 
             $('.detail_content').children().remove();
 
@@ -93,7 +97,7 @@
             res.data.forEach(element => {
                 
                 if(element.animal_id == id){
-                    console.log(element);
+                    // console.log(element);
 
                     if(element.album_file == ''){
                         imgSrc = 'https://picsum.photos/id/1025/200/300'
